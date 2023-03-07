@@ -3,8 +3,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import vertex from "./shaders/vertex.glsl";
 import fragment from "./shaders/fragment.glsl";
+import * as dat from "dat.gui";
 
-import testTexture from "./textures/water.jpg";
+import testTexture from "./textures/texture.jpg";
 
 export default class Sketch {
   constructor(options) {
@@ -33,10 +34,20 @@ export default class Sketch {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.time = 0;
+    this.setupSettings();
     this.resize();
     this.addObjects();
     this.render();
     this.setupResize();
+  }
+
+  setupSettings() {
+    this.settings = {
+      progress: 0,
+    };
+    this.gui = new dat.GUI();
+    // want the progress to be between 0 and 1 with a step of 0.001
+    this.gui.add(this.settings, "progress", 0, 1, 0.001);
   }
 
   resize() {
@@ -53,24 +64,32 @@ export default class Sketch {
 
   addObjects() {
     // 350 is the size of the plane 100 is the number of segments
-    this.geometry = new THREE.PlaneGeometry(350, 350, 100, 100);
+    this.geometry = new THREE.PlaneGeometry(300, 300, 100, 100);
     this.material = new THREE.ShaderMaterial({
       // wireframe: true,
       uniforms: {
         time: { value: 1.0 },
+        uProgress: { value: 0.0 },
         uTexture: { value: new THREE.TextureLoader().load(testTexture) },
-        resolution: { value: new THREE.Vector2() },
+        // the width and the height of the screen
+        uResolution: { value: new THREE.Vector2(this.width, this.height) },
+        // the size of the plane
+        uQuadSize: { value: new THREE.Vector2(300, 300) },
       },
       vertexShader: vertex,
       fragmentShader: fragment,
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.position.x = 300;
+    this.mesh.rotation.z = 0.5;
     this.scene.add(this.mesh);
   }
   render() {
     this.time += 0.05;
     this.material.uniforms.time.value = this.time;
+    // this mean my webgl is adjustable
+    this.material.uniforms.uProgress.value = this.settings.progress;
     this.mesh.rotation.x = this.time / 2000;
     this.mesh.rotation.y = this.time / 1000;
 
