@@ -8,7 +8,12 @@ varying vec2 vUv;
 varying vec2 vSize;
 
 void main(){
+  float PI = 3.1415926535897932384626433832795;
   vUv = uv;
+  float sine = sin(PI*uProgress);
+  // create a wave effect taking the length of the uv
+  // decrease the number of waves by changing the 15. to a higher or lawer number
+  float waves = sine*0.1*sin(5.*length(uv) + 15.*uProgress);
   // set the position to the center of the screen
   vec4 defaultState = modelMatrix * vec4(position, 1.0);
   vec4 fullScreenState = vec4( position, 1.0 );
@@ -21,7 +26,7 @@ void main(){
     uv.y
   );
 
-  vec4 finalState = mix(defaultState, fullScreenState, cornersProgress);
+  vec4 finalState = mix(defaultState, fullScreenState, uProgress + waves);
 
   // get the step of the quad on each step of the animation
   vSize = mix(uQuadSize, uResolution, uProgress);

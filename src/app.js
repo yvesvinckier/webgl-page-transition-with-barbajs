@@ -74,7 +74,7 @@ export default class Sketch {
         uTexture: { value: new THREE.TextureLoader().load(testTexture) },
         // the size of the texture : 100x100 because it's a square
         uTextureSize: { value: new THREE.Vector2(100, 100) },
-        // starter point of the animation
+        // starter point of the corners animation
         uCorners: { value: new THREE.Vector4(0, 0, 0, 0) },
         // the width and the height of the screen => the final size of the plane
         uResolution: { value: new THREE.Vector2(this.width, this.height) },
@@ -118,16 +118,16 @@ export default class Sketch {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.position.x = 300;
-    this.mesh.rotation.z = 0.5;
     this.scene.add(this.mesh);
   }
   render() {
     this.time += 0.05;
+    // update the time in the shader
     this.material.uniforms.time.value = this.time;
     // this mean my webgl is adjustable
-    // this.material.uniforms.uProgress.value = this.settings.progress;
+    this.material.uniforms.uProgress.value = this.settings.progress;
     // the x will go to 1 and the y will go to 1
-    this.tl.progress(this.settings.progress);
+    // this.tl.progress(this.settings.progress);
     this.mesh.rotation.x = this.time / 2000;
     this.mesh.rotation.y = this.time / 1000;
 
