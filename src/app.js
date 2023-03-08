@@ -71,9 +71,11 @@ export default class Sketch {
         time: { value: 1.0 },
         uProgress: { value: 0.0 },
         uTexture: { value: new THREE.TextureLoader().load(testTexture) },
-        // the width and the height of the screen
+        // the size of the texture : 100x100 because it's a square
+        uTextureSize: { value: new THREE.Vector2(100, 100) },
+        // the width and the height of the screen => the final size of the plane
         uResolution: { value: new THREE.Vector2(this.width, this.height) },
-        // the size of the plane
+        // the starter size of the plane
         uQuadSize: { value: new THREE.Vector2(300, 300) },
       },
       vertexShader: vertex,

@@ -4,6 +4,7 @@ uniform vec2 uResolution;
 uniform vec2 uQuadSize;
 
 varying vec2 vUv;
+varying vec2 vSize;
 
 void main(){
   vUv = uv;
@@ -15,5 +16,8 @@ void main(){
   fullScreenState.y *= uResolution.y/uQuadSize.y;
 
   vec4 finalState = mix(defaultState, fullScreenState, uProgress);
+
+  // get the step of the quad on each step of the animation
+  vSize = mix(uQuadSize, uResolution, uProgress);
   gl_Position = projectionMatrix * viewMatrix * finalState;
 }
